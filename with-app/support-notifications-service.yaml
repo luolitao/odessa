@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f ../docker-compose-no-secty-with-app-sample.yml convert
+    kompose.version: 1.36.0 (ae2a39403)
+  labels:
+    io.kompose.service: support-notifications
+  name: support-notifications
+spec:
+  ports:
+    - name: "59860"
+      port: 59860
+      targetPort: 59860
+  selector:
+    io.kompose.service: support-notifications

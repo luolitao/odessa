@@ -1,0 +1,134 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f ../docker-compose-zero-trust.yml convert
+    kompose.version: 1.36.0 (ae2a39403)
+  labels:
+    io.kompose.service: ui
+  name: ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: ui
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose -f ../docker-compose-zero-trust.yml convert
+        kompose.version: 1.36.0 (ae2a39403)
+      labels:
+        io.kompose.service: ui
+    spec:
+      containers:
+        - args:
+            - ./edgex-ui-server
+            - --configDir=res/docker
+          command:
+            - /edgex-init/ready_to_run_wait_install.sh
+          env:
+            - name: BAO_ADDR
+              value: http://edgex-secret-store:8200
+            - name: CLIENTS_CORE_COMMAND_HOST
+              value: core-command.edgex.ziti
+            - name: CLIENTS_CORE_COMMAND_PORT
+              value: "80"
+            - name: CLIENTS_CORE_COMMAND_SECURITYOPTIONS_MODE
+              value: zerotrust
+            - name: CLIENTS_CORE_DATA_HOST
+              value: core-data.edgex.ziti
+            - name: CLIENTS_CORE_DATA_PORT
+              value: "80"
+            - name: CLIENTS_CORE_DATA_SECURITYOPTIONS_MODE
+              value: zerotrust
+            - name: CLIENTS_CORE_METADATA_HOST
+              value: core-metadata.edgex.ziti
+            - name: CLIENTS_CORE_METADATA_PORT
+              value: "80"
+            - name: CLIENTS_CORE_METADATA_SECURITYOPTIONS_MODE
+              value: zerotrust
+            - name: CLIENTS_RULES_ENGINE_HOST
+              value: rules-engine.edgex.ziti
+            - name: CLIENTS_RULES_ENGINE_PORT
+              value: "80"
+            - name: CLIENTS_RULES_ENGINE_SECURITYOPTIONS_MODE
+              value: zerotrust
+            - name: CLIENTS_SECURITY_SECRETSTORE_SETUP_HOST
+              value: edgex-security-secretstore-setup
+            - name: CLIENTS_SUPPORT_NOTIFICATIONS_HOST
+              value: support-notifications.edgex.ziti
+            - name: CLIENTS_SUPPORT_NOTIFICATIONS_PORT
+              value: "80"
+            - name: CLIENTS_SUPPORT_NOTIFICATIONS_SECURITYOPTIONS_MODE
+              value: zerotrust
+            - name: EDGEX_SECURITY_SECRET_STORE
+              value: "true"
+            - name: PROXY_SETUP_HOST
+              value: edgex-security-proxy-setup
+            - name: SECRETSTORE_HOST
+              value: edgex-secret-store
+            - name: SERVICE_HOST
+              value: edgex-ui-go
+            - name: STAGEGATE_BOOTSTRAPPER_HOST
+              value: edgex-security-bootstrapper
+            - name: STAGEGATE_BOOTSTRAPPER_STARTPORT
+              value: "54321"
+            - name: STAGEGATE_DATABASE_HOST
+              value: edgex-postgres
+            - name: STAGEGATE_DATABASE_PORT
+              value: "5432"
+            - name: STAGEGATE_DATABASE_READYPORT
+              value: "5432"
+            - name: STAGEGATE_PROXYSETUP_READYPORT
+              value: "54325"
+            - name: STAGEGATE_READY_TORUNPORT
+              value: "54329"
+            - name: STAGEGATE_REGISTRY_HOST
+              value: edgex-core-keeper
+            - name: STAGEGATE_REGISTRY_PORT
+              value: "59890"
+            - name: STAGEGATE_REGISTRY_READYPORT
+              value: "54324"
+            - name: STAGEGATE_SECRETSTORESETUP_HOST
+              value: edgex-security-secretstore-setup
+            - name: STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT
+              value: "54322"
+            - name: STAGEGATE_WAITFOR_TIMEOUT
+              value: 60s
+          image: edgexfoundry/edgex-ui:4.0.0
+          name: edgex-ui-go
+          ports:
+            - containerPort: 4000
+              protocol: TCP
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsGroup: 2001
+            runAsUser: 2002
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: ui-cm0
+              readOnly: true
+              subPath: localtime
+            - mountPath: /edgex-init
+              name: edgex-init
+            - mountPath: /tmp/edgex/secrets/ui
+              name: ui-claim2
+              readOnly: true
+      hostname: edgex-ui-go
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: localtime
+                path: localtime
+            name: ui-cm0
+          name: ui-cm0
+        - name: edgex-init
+          persistentVolumeClaim:
+            claimName: edgex-init
+        - name: ui-claim2
+          persistentVolumeClaim:
+            claimName: ui-claim2
+            readOnly: true

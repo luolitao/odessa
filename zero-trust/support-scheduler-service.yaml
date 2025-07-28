@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f ../docker-compose-zero-trust.yml convert
+    kompose.version: 1.36.0 (ae2a39403)
+  labels:
+    io.kompose.service: support-scheduler
+  name: support-scheduler
+spec:
+  ports:
+    - name: "59863"
+      port: 59863
+      targetPort: 59863
+  selector:
+    io.kompose.service: support-scheduler

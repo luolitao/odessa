@@ -1,0 +1,117 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f ../docker-compose-zero-trust.yml convert
+    kompose.version: 1.36.0 (ae2a39403)
+  labels:
+    io.kompose.service: core-keeper
+  name: core-keeper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: core-keeper
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose -f ../docker-compose-zero-trust.yml convert
+        kompose.version: 1.36.0 (ae2a39403)
+      labels:
+        io.kompose.service: core-keeper
+    spec:
+      containers:
+        - args:
+            - /core-keeper
+          env:
+            - name: CLIENTS_SECURITY_PROXY_AUTH_HOST
+              value: security-proxy-auth
+            - name: CLIENTS_SECURITY_SECRETSTORE_SETUP_HOST
+              value: edgex-security-secretstore-setup
+            - name: DATABASE_HOST
+              value: edgex-postgres
+            - name: EDGEX_SECURITY_SECRET_STORE
+              value: "true"
+            - name: MESSAGEBUS_AUTHMODE
+              value: usernamepassword
+            - name: MESSAGEBUS_HOST
+              value: edgex-mqtt-broker
+            - name: MESSAGEBUS_PORT
+              value: "1883"
+            - name: MESSAGEBUS_PROTOCOL
+              value: tcp
+            - name: MESSAGEBUS_SECRETNAME
+              value: message-bus
+            - name: MESSAGEBUS_TYPE
+              value: mqtt
+            - name: PROXY_SETUP_HOST
+              value: edgex-security-proxy-setup
+            - name: SECRETSTORE_HOST
+              value: edgex-secret-store
+            - name: SERVICE_HOST
+              value: edgex-core-keeper
+            - name: STAGEGATE_BOOTSTRAPPER_HOST
+              value: edgex-security-bootstrapper
+            - name: STAGEGATE_BOOTSTRAPPER_STARTPORT
+              value: "54321"
+            - name: STAGEGATE_DATABASE_HOST
+              value: edgex-postgres
+            - name: STAGEGATE_DATABASE_PORT
+              value: "5432"
+            - name: STAGEGATE_DATABASE_READYPORT
+              value: "5432"
+            - name: STAGEGATE_PROXYSETUP_READYPORT
+              value: "54325"
+            - name: STAGEGATE_READY_TORUNPORT
+              value: "54329"
+            - name: STAGEGATE_REGISTRY_HOST
+              value: edgex-core-keeper
+            - name: STAGEGATE_REGISTRY_PORT
+              value: "59890"
+            - name: STAGEGATE_REGISTRY_READYPORT
+              value: "54324"
+            - name: STAGEGATE_SECRETSTORESETUP_HOST
+              value: edgex-security-secretstore-setup
+            - name: STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT
+              value: "54322"
+            - name: STAGEGATE_WAITFOR_TIMEOUT
+              value: 60s
+          image: edgexfoundry/core-keeper:4.0.0
+          name: edgex-core-keeper
+          ports:
+            - containerPort: 59890
+              protocol: TCP
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsGroup: 2001
+            runAsUser: 2002
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: core-keeper-cm0
+              readOnly: true
+              subPath: localtime
+            - mountPath: /edgex-init
+              name: edgex-init
+              readOnly: true
+            - mountPath: /tmp/edgex/secrets/core-keeper
+              name: core-keeper-claim2
+              readOnly: true
+      hostname: edgex-core-keeper
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: localtime
+                path: localtime
+            name: core-keeper-cm0
+          name: core-keeper-cm0
+        - name: edgex-init
+          persistentVolumeClaim:
+            claimName: edgex-init
+            readOnly: true
+        - name: core-keeper-claim2
+          persistentVolumeClaim:
+            claimName: core-keeper-claim2
+            readOnly: true

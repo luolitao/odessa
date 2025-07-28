@@ -1,0 +1,94 @@
+---
+# Source: EdgeX/templates/edgex-pv.yaml
+# Copyright (C) 2023 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: edgex-db-volume
+spec:
+  storageClassName: ""
+  claimRef:
+    name: db-data
+    namespace: default
+  capacity:
+    storage: 512Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/edgex-db"
+    type: DirectoryOrCreate
+---
+# Source: EdgeX/templates/edgex-pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: edgex-kuiper-data
+spec:
+  storageClassName: ""
+  claimRef:
+    name: kuiper-data
+    namespace: default
+  capacity:
+    storage: 128Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/edgex-kuiper-data"
+    type: DirectoryOrCreate
+---
+# Source: EdgeX/templates/edgex-pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: edgex-kuiper-etc
+spec:
+  storageClassName: ""
+  claimRef:
+    name: kuiper-etc
+    namespace: default
+  capacity:
+    storage: 8Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/edgex-kuiper-etc"
+    type: DirectoryOrCreate
+---
+# Source: EdgeX/templates/edgex-pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: edgex-kuiper-log
+spec:
+  storageClassName: ""
+  claimRef:
+    name: kuiper-log
+    namespace: default
+  capacity:
+    storage: 128Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/edgex-kuiper-log"
+    type: DirectoryOrCreate
+---
+# Source: EdgeX/templates/edgex-pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: edgex-kuiper-plugins
+spec:
+  storageClassName: ""
+  claimRef:
+    name: kuiper-plugins
+    namespace: default
+  capacity:
+    storage: 128Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/edgex-kuiper-plugins"
+    type: DirectoryOrCreate

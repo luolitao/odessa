@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f ../docker-compose-zero-trust.yml convert
+    kompose.version: 1.36.0 (ae2a39403)
+  labels:
+    io.kompose.service: device-rest
+  name: device-rest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: device-rest
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose -f ../docker-compose-zero-trust.yml convert
+        kompose.version: 1.36.0 (ae2a39403)
+      labels:
+        io.kompose.service: device-rest
+    spec:
+      containers:
+        - args:
+            - /device-rest
+            - --registry
+            - -cp=keeper.http://edgex-core-keeper:59890
+          command:
+            - /edgex-init/ready_to_run_wait_install.sh
+          env:
+            - name: CLIENTS_SECURITY_SECRETSTORE_SETUP_HOST
+              value: edgex-security-secretstore-setup
+            - name: EDGEX_SECURITY_SECRET_STORE
+              value: "true"
+            - name: PROXY_SETUP_HOST
+              value: edgex-security-proxy-setup
+            - name: SECRETSTORE_HOST
+              value: edgex-secret-store
+            - name: SERVICE_HOST
+              value: device-rest.edgex.ziti
+            - name: SERVICE_PORT
+              value: "80"
+            - name: STAGEGATE_BOOTSTRAPPER_HOST
+              value: edgex-security-bootstrapper
+            - name: STAGEGATE_BOOTSTRAPPER_STARTPORT
+              value: "54321"
+            - name: STAGEGATE_DATABASE_HOST
+              value: edgex-postgres
+            - name: STAGEGATE_DATABASE_PORT
+              value: "5432"
+            - name: STAGEGATE_DATABASE_READYPORT
+              value: "5432"
+            - name: STAGEGATE_PROXYSETUP_READYPORT
+              value: "54325"
+            - name: STAGEGATE_READY_TORUNPORT
+              value: "54329"
+            - name: STAGEGATE_REGISTRY_HOST
+              value: edgex-core-keeper
+            - name: STAGEGATE_REGISTRY_PORT
+              value: "59890"
+            - name: STAGEGATE_REGISTRY_READYPORT
+              value: "54324"
+            - name: STAGEGATE_SECRETSTORESETUP_HOST
+              value: edgex-security-secretstore-setup
+            - name: STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT
+              value: "54322"
+            - name: STAGEGATE_WAITFOR_TIMEOUT
+              value: 60s
+          image: edgexfoundry/device-rest:4.0.0
+          name: edgex-device-rest
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsGroup: 2001
+            runAsUser: 2002
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: device-rest-cm0
+              readOnly: true
+              subPath: localtime
+            - mountPath: /edgex-init
+              name: edgex-init
+              readOnly: true
+            - mountPath: /tmp/edgex/secrets/device-rest
+              name: device-rest-claim2
+              readOnly: true
+      hostname: edgex-device-rest
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: localtime
+                path: localtime
+            name: device-rest-cm0
+          name: device-rest-cm0
+        - name: edgex-init
+          persistentVolumeClaim:
+            claimName: edgex-init
+            readOnly: true
+        - name: device-rest-claim2
+          persistentVolumeClaim:
+            claimName: device-rest-claim2
+            readOnly: true

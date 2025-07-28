@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f ../docker-compose-k3s.yml convert
+    kompose.version: 1.36.0 (ae2a39403)
+  labels:
+    io.kompose.service: database
+  name: database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: database
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose -f ../docker-compose-k3s.yml convert
+        kompose.version: 1.36.0 (ae2a39403)
+      labels:
+        io.kompose.service: database
+    spec:
+      containers:
+        - env:
+            - name: POSTGRES_DB
+              value: edgex_db
+            - name: POSTGRES_PASSWORD
+              value: postgres
+          image: domain:5000/postgres:17.5-alpine3.21
+          name: database
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          securityContext:
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: database-cm0
+              readOnly: true
+              subPath: localtime
+            - mountPath: /var/lib/postgresql/data
+              name: db-data
+              subPath: edgex_db
+            - mountPath: /run
+              name: database-tmpfs0
+      hostname: database
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: localtime
+                path: localtime
+            name: database-cm0
+          name: database-cm0
+        - name: db-data
+          persistentVolumeClaim:
+            claimName: db-data
+        - emptyDir:
+            medium: Memory
+          name: database-tmpfs0

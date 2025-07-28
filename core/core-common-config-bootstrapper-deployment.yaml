@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f ../docker-compose-no-secty.yml convert
+    kompose.version: 1.36.0 (ae2a39403)
+  labels:
+    io.kompose.service: core-common-config-bootstrapper
+  name: core-common-config-bootstrapper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: core-common-config-bootstrapper
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose -f ../docker-compose-no-secty.yml convert
+        kompose.version: 1.36.0 (ae2a39403)
+      labels:
+        io.kompose.service: core-common-config-bootstrapper
+    spec:
+      containers:
+        - args:
+            - /core-common-config-bootstrapper
+            - --registry
+            - -cp=keeper.http://core-keeper:59890
+          env:
+            - name: ALL_SERVICES_DATABASE_HOST
+              value: database
+            - name: ALL_SERVICES_MESSAGEBUS_HOST
+              value: mqtt-broker
+            - name: ALL_SERVICES_REGISTRY_HOST
+              value: core-keeper
+            - name: APP_SERVICES_CLIENTS_CORE_METADATA_HOST
+              value: core-metadata
+            - name: DEVICE_SERVICES_CLIENTS_CORE_METADATA_HOST
+              value: core-metadata
+            - name: EDGEX_SECURITY_SECRET_STORE
+              value: "false"
+          image: domain:5000/edgexfoundry/core-common-config-bootstrapper:4.0.0
+          name: core-common-config-bootstrapper
+          securityContext:
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: core-common-config-bootstrapper-cm0
+              readOnly: true
+              subPath: localtime
+      hostname: core-common-config-bootstrapper
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: localtime
+                path: localtime
+            name: core-common-config-bootstrapper-cm0
+          name: core-common-config-bootstrapper-cm0

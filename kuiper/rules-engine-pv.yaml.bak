@@ -1,0 +1,103 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: kuiper-data
+  labels: 
+    name: kuiper-data
+spec:
+  capacity:
+    storage: 128Mi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  local:
+    path: /mnt/edgex-kuiper/data
+    # type: DirectoryOrCreate
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values: 
+          - dev9
+          - dev6
+          - dev7
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: kuiper-etc
+  labels: 
+    name: kuiper-etc
+spec:
+  capacity:
+    storage: 8Mi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  local:
+    path: /mnt/edgex-kuiper/etc
+    # type: DirectoryOrCreate
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values: 
+          - dev9
+          - dev6
+          - dev7
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: kuiper-log
+  labels: 
+    name: kuiper-log
+spec:
+  capacity:
+    storage: 128Mi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  local:
+    path: /mnt/edgex-kuiper/log
+    # type: DirectoryOrCreate
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values: 
+          - dev9
+          - dev6
+          - dev7
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: kuiper-plugins
+  labels: 
+    name: kuiper-plugins
+spec:
+  capacity:
+    storage: 128Mi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  local:
+    path: /mnt/edgex-kuiper/plugins
+    # type: DirectoryOrCreate
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values: 
+          - dev9
+          - dev6
+          - dev7

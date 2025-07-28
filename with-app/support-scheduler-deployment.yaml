@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f ../docker-compose-no-secty-with-app-sample.yml convert
+    kompose.version: 1.36.0 (ae2a39403)
+  labels:
+    io.kompose.service: support-scheduler
+  name: support-scheduler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: support-scheduler
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose -f ../docker-compose-no-secty-with-app-sample.yml convert
+        kompose.version: 1.36.0 (ae2a39403)
+      labels:
+        io.kompose.service: support-scheduler
+    spec:
+      containers:
+        - args:
+            - --registry
+            - -cp=keeper.http://core-keeper:59890
+          env:
+            - name: EDGEX_SECURITY_SECRET_STORE
+              value: "false"
+            - name: SERVICE_HOST
+              value: support-scheduler
+          image: domain:5000/edgexfoundry/support-scheduler:4.0.0
+          name: support-scheduler
+          ports:
+            - containerPort: 59863
+              protocol: TCP
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsGroup: 2001
+            runAsUser: 2002
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: support-scheduler-cm0
+              readOnly: true
+              subPath: localtime
+      hostname: support-scheduler
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: localtime
+                path: localtime
+            name: support-scheduler-cm0
+          name: support-scheduler-cm0

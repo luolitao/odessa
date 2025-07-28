@@ -1,0 +1,95 @@
+# Source: EdgeX/templates/edgex-pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: edgex-kuiper-data
+spec:
+  claimRef:
+    name: kuiper-data
+    namespace: default
+  capacity:
+    storage: 128Mi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: longhorn
+  csi:
+    driver: driver.longhorn.io
+    fsType: ext4
+    volumeAttributes:
+      numberOfReplicas: '3'
+      staleReplicaTimeout: '2880'
+    volumeHandle: existing-longhorn-volume
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: edgex-kuiper-etc
+spec:
+  storageClassName: ""
+  claimRef:
+    name: kuiper-etc
+    namespace: default
+  capacity:
+    storage: 8Mi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: longhorn
+  csi:
+    driver: driver.longhorn.io
+    fsType: ext4
+    volumeAttributes:
+      numberOfReplicas: '3'
+      staleReplicaTimeout: '2880'
+    volumeHandle: existing-longhorn-volume
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: edgex-kuiper-log
+spec:
+  storageClassName: ""
+  claimRef:
+    name: kuiper-log
+    namespace: default
+  capacity:
+    storage: 128Mi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: longhorn
+  csi:
+    driver: driver.longhorn.io
+    fsType: ext4
+    volumeAttributes:
+      numberOfReplicas: '3'
+      staleReplicaTimeout: '2880'
+    volumeHandle: existing-longhorn-volume
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: edgex-kuiper-plugins
+spec:
+  storageClassName: ""
+  claimRef:
+    name: kuiper-plugins
+    namespace: default
+  capacity:
+    storage: 128Mi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: longhorn
+  csi:
+    driver: driver.longhorn.io
+    fsType: ext4
+    volumeAttributes:
+      numberOfReplicas: '3'
+      staleReplicaTimeout: '2880'
+    volumeHandle: existing-longhorn-volume
