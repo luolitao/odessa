@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f ../docker-compose.yml convert
+    kompose.version: 1.36.0 (ae2a39403)
+  labels:
+    io.kompose.service: security-bootstrapper
+  name: security-bootstrapper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: security-bootstrapper
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose -f ../docker-compose.yml convert
+        kompose.version: 1.36.0 (ae2a39403)
+      labels:
+        io.kompose.service: security-bootstrapper
+    spec:
+      containers:
+        - env:
+            - name: EDGEX_GROUP
+              value: "2001"
+            - name: EDGEX_USER
+              value: "2002"
+            - name: PROXY_SETUP_HOST
+              value: security-proxy-setup
+            - name: STAGEGATE_BOOTSTRAPPER_HOST
+              value: security-bootstrapper
+            - name: STAGEGATE_BOOTSTRAPPER_STARTPORT
+              value: "54321"
+            - name: STAGEGATE_DATABASE_HOST
+              value: postgres
+            - name: STAGEGATE_DATABASE_PORT
+              value: "5432"
+            - name: STAGEGATE_DATABASE_READYPORT
+              value: "5432"
+            - name: STAGEGATE_PROXYSETUP_READYPORT
+              value: "54325"
+            - name: STAGEGATE_READY_TORUNPORT
+              value: "54329"
+            - name: STAGEGATE_REGISTRY_HOST
+              value: core-keeper
+            - name: STAGEGATE_REGISTRY_PORT
+              value: "59890"
+            - name: STAGEGATE_REGISTRY_READYPORT
+              value: "54324"
+            - name: STAGEGATE_SECRETSTORESETUP_HOST
+              value: security-secretstore-setup
+            - name: STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT
+              value: "54322"
+            - name: STAGEGATE_WAITFOR_TIMEOUT
+              value: 60s
+          image: domain:5000/edgexfoundry/security-bootstrapper:4.0.0
+          name: security-bootstrapper
+          securityContext:
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: security-bootstrapper-cm0
+              readOnly: true
+              subPath: localtime
+            - mountPath: /edgex-init
+              name: edgex-init
+      hostname: security-bootstrapper
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: localtime
+                path: localtime
+            name: security-bootstrapper-cm0
+          name: security-bootstrapper-cm0
+        - name: edgex-init
+          persistentVolumeClaim:
+            claimName: edgex-init

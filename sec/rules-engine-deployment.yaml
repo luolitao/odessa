@@ -1,0 +1,160 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f ../docker-compose.yml convert
+    kompose.version: 1.36.0 (ae2a39403)
+  labels:
+    io.kompose.service: rules-engine
+  name: rules-engine
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: rules-engine
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose -f ../docker-compose.yml convert
+        kompose.version: 1.36.0 (ae2a39403)
+      labels:
+        io.kompose.service: rules-engine
+    spec:
+      containers:
+        - command:
+            - /edgex-init/kuiper_wait_install.sh
+          env:
+            - name: CONNECTION__EDGEX__MQTTMSGBUS__OPTIONAL__CLIENTID
+              value: kuiper-rules-engine
+            - name: CONNECTION__EDGEX__MQTTMSGBUS__OPTIONAL__KEEPALIVE
+              value: "500"
+            - name: CONNECTION__EDGEX__MQTTMSGBUS__PORT
+              value: "1883"
+            - name: CONNECTION__EDGEX__MQTTMSGBUS__PROTOCOL
+              value: tcp
+            - name: CONNECTION__EDGEX__MQTTMSGBUS__SERVER
+              value: mqtt-broker
+            - name: CONNECTION__EDGEX__MQTTMSGBUS__TYPE
+              value: mqtt
+            - name: EDGEX__DEFAULT__CONNECTIONSELECTOR
+              value: mqttmsgbus
+            - name: EDGEX__DEFAULT__OPTIONAL__CLIENTID
+              value: kuiper-rules-engine
+            - name: EDGEX__DEFAULT__OPTIONAL__KEEPALIVE
+              value: "500"
+            - name: EDGEX__DEFAULT__PORT
+              value: "1883"
+            - name: EDGEX__DEFAULT__PROTOCOL
+              value: tcp
+            - name: EDGEX__DEFAULT__SERVER
+              value: mqtt-broker
+            - name: EDGEX__DEFAULT__TOPIC
+              value: edgex/rules-events
+            - name: EDGEX__DEFAULT__TYPE
+              value: mqtt
+            - name: KUIPER__BASIC__CONSOLELOG
+              value: "true"
+            - name: KUIPER__BASIC__ENABLEOPENZITI
+              value: "false"
+            - name: KUIPER__BASIC__RESTPORT
+              value: "59720"
+            - name: PROXY_SETUP_HOST
+              value: security-proxy-setup
+            - name: STAGEGATE_BOOTSTRAPPER_HOST
+              value: security-bootstrapper
+            - name: STAGEGATE_BOOTSTRAPPER_STARTPORT
+              value: "54321"
+            - name: STAGEGATE_DATABASE_HOST
+              value: database
+            - name: STAGEGATE_DATABASE_PORT
+              value: "5432"
+            - name: STAGEGATE_DATABASE_READYPORT
+              value: "5432"
+            - name: STAGEGATE_PROXYSETUP_READYPORT
+              value: "54325"
+            - name: STAGEGATE_READY_TORUNPORT
+              value: "54329"
+            - name: STAGEGATE_REGISTRY_HOST
+              value: core-keeper
+            - name: STAGEGATE_REGISTRY_PORT
+              value: "59890"
+            - name: STAGEGATE_REGISTRY_READYPORT
+              value: "54324"
+            - name: STAGEGATE_SECRETSTORESETUP_HOST
+              value: security-secretstore-setup
+            - name: STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT
+              value: "54322"
+            - name: STAGEGATE_WAITFOR_TIMEOUT
+              value: 60s
+          image: domain:5000/lfedge/ekuiper:2.1.4-alpine
+          name: edgex-kuiper
+          ports:
+            - containerPort: 59720
+              protocol: TCP
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsGroup: 1001
+            runAsUser: 1001
+            runAsNonRoot: true
+            #supplementalGroups:              - 6
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: rules-engine-cm0
+              readOnly: true
+              subPath: localtime
+            - mountPath: /kuiper/data
+              name: kuiper-data
+            - mountPath: /kuiper/etc
+              name: kuiper-etc
+            - mountPath: /kuiper/log
+              name: kuiper-log
+            - mountPath: /kuiper/plugins
+              name: kuiper-plugins
+            - mountPath: /kuiper/etc/sources
+              name: kuiper-sources
+            - mountPath: /kuiper/etc/connections
+              name: kuiper-connections
+            - mountPath: /edgex-init
+              name: edgex-init
+              readOnly: true
+      hostname: edgex-kuiper
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: localtime
+                path: localtime
+            name: rules-engine-cm0
+          name: rules-engine-cm0
+        - name: kuiper-data
+          #persistentVolumeClaim:
+          #  claimName: kuiper-data
+          hostPath:
+            path: "/mnt/edgex-kuiper/data"
+            type: DirectoryOrCreate
+        - name: kuiper-etc
+          #persistentVolumeClaim:
+          #  claimName: kuiper-etc
+          hostPath:
+            path: "/mnt/edgex-kuiper/etc"
+            type: DirectoryOrCreate
+        - name: kuiper-log
+          hostPath:
+            path: "/mnt/edgex-kuiper/log"
+            type: DirectoryOrCreate
+        - name: kuiper-plugins
+          hostPath:
+            path: "/mnt/edgex-kuiper/plugins"
+            type: DirectoryOrCreate
+        - name: kuiper-sources
+          persistentVolumeClaim:
+            claimName: kuiper-sources
+        - name: kuiper-connections
+          persistentVolumeClaim:
+            claimName: kuiper-connections
+        - name: edgex-init
+          persistentVolumeClaim:
+            claimName: edgex-init
+            readOnly: true

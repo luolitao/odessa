@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f ../docker-compose.yml convert
+    kompose.version: 1.36.0 (ae2a39403)
+  labels:
+    io.kompose.service: mqtt-broker
+  name: mqtt-broker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mqtt-broker
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose -f ../docker-compose.yml convert
+        kompose.version: 1.36.0 (ae2a39403)
+      labels:
+        io.kompose.service: mqtt-broker
+    spec:
+      containers:
+        - args:
+            - /usr/sbin/mosquitto
+            - -c
+            - /mosquitto/config/mosquitto.conf
+          command:
+            - /edgex-init/messagebus_wait_install.sh
+          env:
+            - name: BROKER_TYPE
+              value: mosquitto
+            - name: CLIENTS_SECURITY_SECRETSTORE_SETUP_HOST
+              value: security-secretstore-setup
+            - name: CONF_DIR
+              value: /edgex-init/bootstrap-mosquitto/res
+            - name: EDGEX_SECURITY_SECRET_STORE
+              value: "true"
+            - name: ENTRYPOINT
+              value: /docker-entrypoint.sh /usr/sbin/mosquitto  -c  /mosquitto/config/mosquitto.conf
+            - name: PROXY_SETUP_HOST
+              value: security-proxy-setup
+            - name: SECRETSTORE_HOST
+              value: secret-store
+            - name: STAGEGATE_BOOTSTRAPPER_HOST
+              value: security-bootstrapper
+            - name: STAGEGATE_BOOTSTRAPPER_STARTPORT
+              value: "54321"
+            - name: STAGEGATE_DATABASE_HOST
+              value: postgres
+            - name: STAGEGATE_DATABASE_PORT
+              value: "5432"
+            - name: STAGEGATE_DATABASE_READYPORT
+              value: "5432"
+            - name: STAGEGATE_PROXYSETUP_READYPORT
+              value: "54325"
+            - name: STAGEGATE_READY_TORUNPORT
+              value: "54329"
+            - name: STAGEGATE_REGISTRY_HOST
+              value: core-keeper
+            - name: STAGEGATE_REGISTRY_PORT
+              value: "59890"
+            - name: STAGEGATE_REGISTRY_READYPORT
+              value: "54324"
+            - name: STAGEGATE_SECRETSTORESETUP_HOST
+              value: security-secretstore-setup
+            - name: STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT
+              value: "54322"
+            - name: STAGEGATE_WAITFOR_TIMEOUT
+              value: 60s
+          image: domain:5000/eclipse-mosquitto:2.0.21
+          name: edgex-mqtt-broker
+          ports:
+            - containerPort: 1883
+              protocol: TCP
+          securityContext:
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - mountPath: /mosquitto
+              name: mqtt
+            - mountPath: /edgex-init
+              name: edgex-init
+              readOnly: true
+            - mountPath: /tmp/edgex/secrets/security-bootstrapper-messagebus
+              name: mqtt-broker-claim2
+              readOnly: true
+      hostname: edgex-mqtt-broker
+      restartPolicy: Always
+      volumes:
+        - name: mqtt
+          persistentVolumeClaim:
+            claimName: mqtt
+        - name: edgex-init
+          persistentVolumeClaim:
+            claimName: edgex-init
+            readOnly: true
+        - name: mqtt-broker-claim2
+          persistentVolumeClaim:
+            claimName: mqtt-broker-claim2
+            readOnly: true

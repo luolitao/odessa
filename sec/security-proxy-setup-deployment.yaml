@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f ../docker-compose.yml convert
+    kompose.version: 1.36.0 (ae2a39403)
+  labels:
+    io.kompose.service: security-proxy-setup
+  name: security-proxy-setup
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: security-proxy-setup
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose -f ../docker-compose.yml convert
+        kompose.version: 1.36.0 (ae2a39403)
+      labels:
+        io.kompose.service: security-proxy-setup
+    spec:
+      containers:
+        - command:
+            - /edgex-init/proxy_setup_wait_install.sh
+          env:
+            - name: CLIENTS_SECURITY_SECRETSTORE_SETUP_HOST
+              value: security-secretstore-setup
+            - name: EDGEX_ADD_PROXY_ROUTE
+              value: device-rest.http://edgex-device-rest:59986
+            - name: EDGEX_SECURITY_SECRET_STORE
+              value: "true"
+            - name: PROXY_SETUP_HOST
+              value: security-proxy-setup
+            - name: SECRETSTORE_HOST
+              value: secret-store
+            - name: STAGEGATE_BOOTSTRAPPER_HOST
+              value: security-bootstrapper
+            - name: STAGEGATE_BOOTSTRAPPER_STARTPORT
+              value: "54321"
+            - name: STAGEGATE_DATABASE_HOST
+              value: database
+            - name: STAGEGATE_DATABASE_PORT
+              value: "5432"
+            - name: STAGEGATE_DATABASE_READYPORT
+              value: "5432"
+            - name: STAGEGATE_PROXYSETUP_READYPORT
+              value: "54325"
+            - name: STAGEGATE_READY_TORUNPORT
+              value: "54329"
+            - name: STAGEGATE_REGISTRY_HOST
+              value: core-keeper
+            - name: STAGEGATE_REGISTRY_PORT
+              value: "59890"
+            - name: STAGEGATE_REGISTRY_READYPORT
+              value: "54324"
+            - name: STAGEGATE_SECRETSTORESETUP_HOST
+              value: security-secretstore-setup
+            - name: STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT
+              value: "54322"
+            - name: STAGEGATE_WAITFOR_TIMEOUT
+              value: 60s
+          image: domain:5000/edgexfoundry/security-proxy-setup:4.0.0
+          name: security-proxy-setup
+          securityContext:
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: security-proxy-setup-cm0
+              readOnly: true
+              subPath: localtime
+            - mountPath: /edgex-init
+              name: edgex-init
+              readOnly: true
+            - mountPath: /openbao/config
+              name: secret-store-config
+            - mountPath: /etc/nginx/templates
+              name: nginx-templates
+            - mountPath: /etc/ssl/nginx
+              name: nginx-tls
+            - mountPath: /tmp/edgex/secrets/security-proxy-setup
+              name: security-proxy-setup-claim5
+              subPath: security-proxy-setup
+              readOnly: true
+      hostname: security-proxy-setup
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: localtime
+                path: localtime
+            name: security-proxy-setup-cm0
+          name: security-proxy-setup-cm0
+        - name: edgex-init
+          persistentVolumeClaim:
+            claimName: edgex-init
+            readOnly: true
+        - name: secret-store-config
+          persistentVolumeClaim:
+            claimName: secret-store-config
+        - name: nginx-templates
+          persistentVolumeClaim:
+            claimName: nginx-templates
+        - name: nginx-tls
+          persistentVolumeClaim:
+            claimName: nginx-tls
+        - name: security-proxy-setup-claim5
+          persistentVolumeClaim:
+            claimName: security-secretstore
+            readOnly: true

@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f ../docker-compose.yml convert
+    kompose.version: 1.36.0 (ae2a39403)
+  labels:
+    io.kompose.service: nginx
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: nginx
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose -f ../docker-compose.yml convert
+        kompose.version: 1.36.0 (ae2a39403)
+      labels:
+        io.kompose.service: nginx
+    spec:
+      containers:
+        - args:
+            - /docker-entrypoint.sh
+            - nginx
+            - -g
+            - daemon off;
+          command:
+            - /bin/sh
+            - /edgex-init/nginx_wait_install.sh
+          env:
+            - name: PROXY_SETUP_HOST
+              value: security-proxy-setup
+            - name: STAGEGATE_BOOTSTRAPPER_HOST
+              value: security-bootstrapper
+            - name: STAGEGATE_BOOTSTRAPPER_STARTPORT
+              value: "54321"
+            - name: STAGEGATE_DATABASE_HOST
+              value: database
+            - name: STAGEGATE_DATABASE_PORT
+              value: "5432"
+            - name: STAGEGATE_DATABASE_READYPORT
+              value: "5432"
+            - name: STAGEGATE_PROXYSETUP_READYPORT
+              value: "54325"
+            - name: STAGEGATE_READY_TORUNPORT
+              value: "54329"
+            - name: STAGEGATE_REGISTRY_HOST
+              value: core-keeper
+            - name: STAGEGATE_REGISTRY_PORT
+              value: "59890"
+            - name: STAGEGATE_REGISTRY_READYPORT
+              value: "54324"
+            - name: STAGEGATE_SECRETSTORESETUP_HOST
+              value: security-secretstore-setup
+            - name: STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT
+              value: "54322"
+            - name: STAGEGATE_WAITFOR_TIMEOUT
+              value: 60s
+          image: domain:5000/nginx:1.28-alpine-slim
+          name: edgex-nginx
+          ports:
+            - containerPort: 8443
+              protocol: TCP
+          securityContext:
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - mountPath: /edgex-init
+              name: edgex-init
+              readOnly: true
+            - mountPath: /etc/nginx/templates
+              name: nginx-templates
+            - mountPath: /etc/ssl/nginx
+              name: nginx-tls
+            - mountPath: /etc/nginx/conf.d
+              name: nginx-tmpfs0
+            - mountPath: /var/cache/nginx
+              name: nginx-tmpfs1
+            - mountPath: /var/log/nginx
+              name: nginx-tmpfs2
+            - mountPath: /var/run
+              name: nginx-tmpfs3
+      hostname: edgex-nginx
+      restartPolicy: Always
+      volumes:
+        - name: edgex-init
+          persistentVolumeClaim:
+            claimName: edgex-init
+            readOnly: true
+        - name: nginx-templates
+          persistentVolumeClaim:
+            claimName: nginx-templates
+        - name: nginx-tls
+          persistentVolumeClaim:
+            claimName: nginx-tls
+        - emptyDir:
+            medium: Memory
+          name: nginx-tmpfs0
+        - emptyDir:
+            medium: Memory
+          name: nginx-tmpfs1
+        - emptyDir:
+            medium: Memory
+          name: nginx-tmpfs2
+        - emptyDir:
+            medium: Memory
+          name: nginx-tmpfs3
