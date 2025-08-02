@@ -79,3 +79,10 @@ spec:
                 path: localtime
             name: rules-engine-cm0
           name: rules-engine-cm0
+        - name: kuiper-log
+          persistentVolumeClaim:
+            claimName: kuiper-log
+        - name: kuiper-plugins
+          persistentVolumeClaim:
+            claimName: kuiper-plugins
+

@@ -63,19 +63,14 @@ spec:
               protocol: TCP
           securityContext:
             readOnlyRootFilesystem: true
+            runAsGroup: 1001
+            runAsUser: 1001
+            runAsNonRoot: true
           volumeMounts:
             - mountPath: /etc/localtime
               name: rules-engine-cm0
               readOnly: true
               subPath: localtime
-            - mountPath: /kuiper/data
-              name: kuiper-data
-            - mountPath: /kuiper/etc
-              name: kuiper-etc
-            - mountPath: /kuiper/log
-              name: kuiper-log
-            - mountPath: /kuiper/plugins
-              name: kuiper-plugins
       hostname: edgex-kuiper
       restartPolicy: Always
       volumes:
@@ -85,19 +80,3 @@ spec:
                 path: localtime
             name: rules-engine-cm0
           name: rules-engine-cm0
-        - name: kuiper-data
-          hostPath:
-            path: "/mnt/edgex-kuiper-data"
-            type: DirectoryOrCreate
-        - name: kuiper-etc
-          hostPath:
-            path: "/mnt/edgex-kuiper-etc"
-            type: DirectoryOrCreate
-        - name: kuiper-log
-          hostPath:
-            path: "/mnt/edgex-kuiper-log"
-            type: DirectoryOrCreate
-        - name: kuiper-plugins
-          hostPath:
-            path: "/mnt/edgex-kuiper-plugins"
-            type: DirectoryOrCreate
