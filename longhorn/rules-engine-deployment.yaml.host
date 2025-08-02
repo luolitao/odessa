@@ -86,14 +86,18 @@ spec:
             name: rules-engine-cm0
           name: rules-engine-cm0
         - name: kuiper-data
-          persistentVolumeClaim:
-            claimName: kuiper-data
+          hostPath:
+            path: "/mnt/edgex-kuiper-data"
+            type: DirectoryOrCreate
         - name: kuiper-etc
-          persistentVolumeClaim:
-            claimName: kuiper-etc
+          hostPath:
+            path: "/mnt/edgex-kuiper-etc"
+            type: DirectoryOrCreate
         - name: kuiper-log
-          persistentVolumeClaim:
-            claimName: kuiper-log
+          hostPath:
+            path: "/mnt/edgex-kuiper-log"
+            type: DirectoryOrCreate
         - name: kuiper-plugins
-          persistentVolumeClaim:
-            claimName: kuiper-plugins
+          hostPath:
+            path: "/mnt/edgex-kuiper-plugins"
+            type: DirectoryOrCreate
