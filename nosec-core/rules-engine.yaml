@@ -1,3 +1,14 @@
+apiVersion: v1
+binaryData:
+  localtime: VkZwcFpqSUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFkQUFBQUF3QUFBQXlBQUFBQW9KZWlnS0Y1QlBESVdWNkF5UW41Y01uVHZRRExCWXJ3eTN4QUFOSTdQdkRUaTN1QTFFS3Q4TlZGSWdEV1RML3cxenkvQU5nR1puRFpIZktBMlVGODhCNjZVaUFmYVp1UUlINkVvQ0ZKZlpBaVo2RWdJeWxma0NSSGd5QWxFbndRSmlkbElDYnlYaEFvQjBjZ0tOSkFFQUlCQWdFQ0FRSUJBZ0VDQVFJQkFnRUNBUUlCQWdFQ0FRSUJBZ0VDQUFCeDF3QUFBQUIra0FFRUFBQndnQUFJVEUxVUFFTkVWQUJEVTFRQVZGcHBaaklBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBZEFBQUFBd0FBQUF6Ly8vLy9malpES2YvLy8vK2dsNktBLy8vLy82RjVCUEQvLy8vL3lGbGVnUC8vLy8vSkNmbHcvLy8vLzhuVHZRRC8vLy8veXdXSzhQLy8vLy9MZkVBQS8vLy8vOUk3UHZELy8vLy8wNHQ3Z1AvLy8vL1VRcTN3Ly8vLy85VkZJZ0QvLy8vLzFreS84UC8vLy8vWFBMOEEvLy8vLzlnR1puRC8vLy8vMlIzeWdQLy8vLy9aUVh6d0FBQUFBQjY2VWlBQUFBQUFIMm1ia0FBQUFBQWdmb1NnQUFBQUFDRkpmWkFBQUFBQUltZWhJQUFBQUFBaktWK1FBQUFBQUNSSGd5QUFBQUFBSlJKOEVBQUFBQUFtSjJVZ0FBQUFBQ2J5WGhBQUFBQUFLQWRISUFBQUFBQW8wa0FRQWdFQ0FRSUJBZ0VDQVFJQkFnRUNBUUlCQWdFQ0FRSUJBZ0VDQVFJQUFISFhBQUFBQUg2UUFRUUFBSENBQUFoTVRWUUFRMFJVQUVOVFZBQUtRMU5VTFRnSw==
+kind: ConfigMap
+metadata:
+  annotations:
+    use-subpath: "true"
+  labels:
+    io.kompose.service: rules-engine
+  name: rules-engine-cm0
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -56,7 +67,7 @@ spec:
               value: "false"
             - name: KUIPER__BASIC__RESTPORT
               value: "59720"
-          image: domain:5000/lfedge/ekuiper:2.1.5-alpine
+          image: domain:5000/ekuiper:2.1.5-alpine
           name: edgex-kuiper
           ports:
             - containerPort: 59720
@@ -65,36 +76,11 @@ spec:
             readOnlyRootFilesystem: true
             runAsGroup: 1001
             runAsUser: 1001
-            runAsNonRoot: true
           volumeMounts:
             - mountPath: /etc/localtime
               name: rules-engine-cm0
               readOnly: true
               subPath: localtime
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 454ce50 (0817)
-=======
-            - mountPath: /kuiper/data
-              name: kuiper-data
-              subPath: data
-            - mountPath: /kuiper/etc
-              name: kuiper-etc
-              subPath: etc
-            - mountPath: /kuiper/log
-              name: kuiper-log
-              subPath: log
-            - mountPath: /kuiper/plugins
-              name: kuiper-plugins
-              subPath: pluhins
->>>>>>> refs/remotes/origin/main
-<<<<<<< HEAD
-=======
->>>>>>> 8c827fc (0816)
-=======
->>>>>>> 454ce50 (0817)
       hostname: edgex-kuiper
       restartPolicy: Always
       volumes:
@@ -104,27 +90,4 @@ spec:
                 path: localtime
             name: rules-engine-cm0
           name: rules-engine-cm0
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 454ce50 (0817)
-=======
-        - name: kuiper-data
-          persistentVolumeClaim:
-            claimName: kuiper-data
-        - name: kuiper-etc
-          persistentVolumeClaim:
-            claimName: kuiper-etc
-        - name: kuiper-log
-          persistentVolumeClaim:
-            claimName: kuiper-log
-        - name: kuiper-plugins
-          persistentVolumeClaim:
-            claimName: kuiper-plugins
->>>>>>> refs/remotes/origin/main
-<<<<<<< HEAD
-=======
->>>>>>> 8c827fc (0816)
-=======
->>>>>>> 454ce50 (0817)
+---

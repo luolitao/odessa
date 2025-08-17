@@ -93,11 +93,16 @@ spec:
             name: rules-engine-cm0
           name: rules-engine-cm0
         - name: kuiper-data
+<<<<<<< HEAD
+=======
+<<<<<<<< HEAD:kuiper/rules-engine-deployment.yaml.longhorn
+>>>>>>> 454ce50 (0817)
           persistentVolumeClaim:
             claimName: kuiper-data
           #hostPath:
           #  path: "/mnt/edgex-kuiper/data"
           #  type: DirectoryOrCreate
+<<<<<<< HEAD
         - name: kuiper-etc
           persistentVolumeClaim:
             claimName: kuiper-etc
@@ -107,3 +112,22 @@ spec:
         - name: kuiper-plugins
           persistentVolumeClaim:
             claimName: kuiper-plugins
+=======
+========
+          hostPath:
+            path: "/mnt/edgex-kuiper-data"
+            type: DirectoryOrCreate
+>>>>>>>> refs/remotes/origin/main:longhorn/rules-engine-deployment.yaml.host
+        - name: kuiper-etc
+          hostPath:
+            path: "/mnt/edgex-kuiper-etc"
+            type: DirectoryOrCreate
+        - name: kuiper-log
+          hostPath:
+            path: "/mnt/edgex-kuiper-log"
+            type: DirectoryOrCreate
+        - name: kuiper-plugins
+          hostPath:
+            path: "/mnt/edgex-kuiper-plugins"
+            type: DirectoryOrCreate
+>>>>>>> 454ce50 (0817)

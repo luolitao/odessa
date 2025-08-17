@@ -1,0 +1,94 @@
+apiVersion: v1
+binaryData:
+  localtime: VkZwcFpqSUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFkQUFBQUF3QUFBQXlBQUFBQW9KZWlnS0Y1QlBESVdWNkF5UW41Y01uVHZRRExCWXJ3eTN4QUFOSTdQdkRUaTN1QTFFS3Q4TlZGSWdEV1RML3cxenkvQU5nR1puRFpIZktBMlVGODhCNjZVaUFmYVp1UUlINkVvQ0ZKZlpBaVo2RWdJeWxma0NSSGd5QWxFbndRSmlkbElDYnlYaEFvQjBjZ0tOSkFFQUlCQWdFQ0FRSUJBZ0VDQVFJQkFnRUNBUUlCQWdFQ0FRSUJBZ0VDQUFCeDF3QUFBQUIra0FFRUFBQndnQUFJVEUxVUFFTkVWQUJEVTFRQVZGcHBaaklBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBZEFBQUFBd0FBQUF6Ly8vLy9malpES2YvLy8vK2dsNktBLy8vLy82RjVCUEQvLy8vL3lGbGVnUC8vLy8vSkNmbHcvLy8vLzhuVHZRRC8vLy8veXdXSzhQLy8vLy9MZkVBQS8vLy8vOUk3UHZELy8vLy8wNHQ3Z1AvLy8vL1VRcTN3Ly8vLy85VkZJZ0QvLy8vLzFreS84UC8vLy8vWFBMOEEvLy8vLzlnR1puRC8vLy8vMlIzeWdQLy8vLy9aUVh6d0FBQUFBQjY2VWlBQUFBQUFIMm1ia0FBQUFBQWdmb1NnQUFBQUFDRkpmWkFBQUFBQUltZWhJQUFBQUFBaktWK1FBQUFBQUNSSGd5QUFBQUFBSlJKOEVBQUFBQUFtSjJVZ0FBQUFBQ2J5WGhBQUFBQUFLQWRISUFBQUFBQW8wa0FRQWdFQ0FRSUJBZ0VDQVFJQkFnRUNBUUlCQWdFQ0FRSUJBZ0VDQVFJQUFISFhBQUFBQUg2UUFRUUFBSENBQUFoTVRWUUFRMFJVQUVOVFZBQUtRMU5VTFRnSw==
+kind: ConfigMap
+metadata:
+  annotations:
+    use-subpath: "true"
+  labels:
+    io.kompose.service: core-keeper
+  name: core-keeper-cm0
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f ../docker-compose-no-secty.yml convert
+    kompose.version: 1.36.0 (ae2a39403)
+  labels:
+    io.kompose.service: core-keeper
+  name: core-keeper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: core-keeper
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose -f ../docker-compose-no-secty.yml convert
+        kompose.version: 1.36.0 (ae2a39403)
+      labels:
+        io.kompose.service: core-keeper
+    spec:
+      containers:
+        - env:
+            - name: DATABASE_HOST
+              value: database
+            - name: DATABASE_PORT
+              value: "5432"
+            - name: EDGEX_SECURITY_SECRET_STORE
+              value: "false"
+            - name: MESSAGEBUS_AUTHMODE
+              value: none
+            - name: MESSAGEBUS_HOST
+              value: mqtt-broker
+            - name: MESSAGEBUS_PORT
+              value: "1883"
+            - name: MESSAGEBUS_PROTOCOL
+              value: tcp
+            - name: MESSAGEBUS_SECRETNAME
+            - name: MESSAGEBUS_TYPE
+              value: mqtt
+            - name: SERVICE_HOST
+              value: core-keeper
+          image: domain:5000/edgex/core-keeper:4.0.0
+          name: core-keeper
+          ports:
+            - containerPort: 59890
+              protocol: TCP
+          securityContext:
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: core-keeper-cm0
+              readOnly: true
+              subPath: localtime
+      hostname: core-keeper
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: localtime
+                path: localtime
+            name: core-keeper-cm0
+          name: core-keeper-cm0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f ../docker-compose-no-secty.yml convert
+    kompose.version: 1.36.0 (ae2a39403)
+  labels:
+    io.kompose.service: core-keeper
+  name: core-keeper
+spec:
+  ports:
+    - name: "59890"
+      port: 59890
+      targetPort: 59890
+  selector:
+    io.kompose.service: core-keeper
