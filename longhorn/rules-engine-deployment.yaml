@@ -72,6 +72,7 @@ spec:
               readOnly: true
               subPath: localtime
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
             - mountPath: /kuiper/data
               name: kuiper-data
@@ -86,6 +87,8 @@ spec:
               name: kuiper-plugins
               subPath: pluhins
 >>>>>>> refs/remotes/origin/main
+=======
+>>>>>>> 8c827fc (0816)
       hostname: edgex-kuiper
       restartPolicy: Always
       volumes:
@@ -95,6 +98,7 @@ spec:
                 path: localtime
             name: rules-engine-cm0
           name: rules-engine-cm0
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
         - name: kuiper-data
@@ -110,3 +114,5 @@ spec:
           persistentVolumeClaim:
             claimName: kuiper-plugins
 >>>>>>> refs/remotes/origin/main
+=======
+>>>>>>> 8c827fc (0816)

@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f ../docker-compose-no-secty.yml convert
+    kompose.version: 1.36.0 (ae2a39403)
+  labels:
+    io.kompose.service: app-rules-engine
+  name: app-rules-engine
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: app-rules-engine
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose -f ../docker-compose-no-secty.yml convert
+        kompose.version: 1.36.0 (ae2a39403)
+      labels:
+        io.kompose.service: app-rules-engine
+    spec:
+      containers:
+        - args:
+            - --registry
+            - -cp=keeper.http://edgex-core-keeper:59890
+          env:
+            - name: EDGEX_PROFILE
+              value: rules-engine
+            - name: EDGEX_SECURITY_SECRET_STORE
+              value: "false"
+            - name: SERVICE_HOST
+              value: edgex-app-rules-engine
+          image: domain:5000/edgexfoundry/app-service-configurable:4.0.0
+          name: edgex-app-rules-engine
+          ports:
+            - containerPort: 59701
+              protocol: TCP
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsGroup: 2001
+            runAsUser: 2002
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: app-rules-engine-cm0
+              readOnly: true
+              subPath: localtime
+      hostname: edgex-app-rules-engine
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: localtime
+                path: localtime
+            name: app-rules-engine-cm0
+          name: app-rules-engine-cm0

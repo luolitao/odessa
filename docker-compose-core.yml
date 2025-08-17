@@ -1,11 +1,10 @@
 name: edgex
 services:
- 
   core-common-config-bootstrapper:
     command:
       - /core-common-config-bootstrapper
       - --registry
-      - -cp=keeper.http://core-keeper:59890
+      - -cp=keeper.http://edgex-core-keeper:59890
     container_name: edgex-core-common-config-bootstrapper
     depends_on:
       core-keeper:
@@ -15,8 +14,8 @@ services:
       ALL_SERVICES_DATABASE_HOST: database
       ALL_SERVICES_MESSAGEBUS_HOST: mqtt-broker
       ALL_SERVICES_REGISTRY_HOST: core-keeper
-      APP_SERVICES_CLIENTS_CORE_METADATA_HOST: core-metadata
-      DEVICE_SERVICES_CLIENTS_CORE_METADATA_HOST: core-metadata
+      APP_SERVICES_CLIENTS_CORE_METADATA_HOST: edgex-core-metadata
+      DEVICE_SERVICES_CLIENTS_CORE_METADATA_HOST: edgex-core-metadata
       EDGEX_SECURITY_SECRET_STORE: "false"
     hostname: edgex-core-common-config-bootstrapper
     image: domain:5000/edgexfoundry/core-common-config-bootstrapper:4.0.0
@@ -33,7 +32,6 @@ services:
         read_only: true
         bind:
           create_host_path: true
- 
   core-keeper:
     container_name: edgex-core-keeper
     depends_on:
@@ -49,7 +47,7 @@ services:
       MESSAGEBUS_PROTOCOL: tcp
       MESSAGEBUS_SECRETNAME: ""
       MESSAGEBUS_TYPE: mqtt
-      SERVICE_HOST: core-keeper
+      SERVICE_HOST: edgex-core-keeper
     hostname: edgex-core-keeper
     image: domain:5000/edgexfoundry/core-keeper:4.0.0
     networks:
@@ -75,7 +73,7 @@ services:
   core-metadata:
     command:
       - --registry
-      - -cp=keeper.http://core-keeper:59890
+      - -cp=keeper.http://edgex-core-keeper:59890
     container_name: edgex-core-metadata
     depends_on:
       core-keeper:
@@ -86,7 +84,7 @@ services:
         required: true
     environment:
       EDGEX_SECURITY_SECRET_STORE: "false"
-      SERVICE_HOST: core-metadata
+      SERVICE_HOST: edgex-core-metadata
     hostname: edgex-core-metadata
     image: domain:5000/edgexfoundry/core-metadata:4.0.0
     networks:
@@ -141,7 +139,6 @@ services:
         source: db-data
         target: /var/lib/postgresql/data
         volume: {}
-  
   mqtt-broker:
     command:
       - /usr/sbin/mosquitto
@@ -211,23 +208,6 @@ services:
         read_only: true
         bind:
           create_host_path: true
-      - type: volume
-        source: kuiper-data
-        target: /kuiper/data
-        volume: {}
-      - type: volume
-        source: kuiper-etc
-        target: /kuiper/etc
-        volume: {}
-      - type: volume
-        source: kuiper-log
-        target: /kuiper/log
-        volume: {}
-      - type: volume
-        source: kuiper-plugins
-        target: /kuiper/plugins
-        volume: {}
-  
   ui:
     container_name: edgex-ui-go
     environment:
@@ -261,11 +241,3 @@ networks:
 volumes:
   db-data:
     name: edgex_db-data
-  kuiper-data:
-    name: edgex_kuiper-data
-  kuiper-etc:
-    name: edgex_kuiper-etc
-  kuiper-log:
-    name: edgex_kuiper-log
-  kuiper-plugins:
-    name: edgex_kuiper-plugins

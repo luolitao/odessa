@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f ../docker-compose-no-secty-with-app-sample.yml convert
+    kompose.version: 1.36.0 (ae2a39403)
+  labels:
+    io.kompose.service: app-sample
+  name: app-sample
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: app-sample
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose -f ../docker-compose-no-secty-with-app-sample.yml convert
+        kompose.version: 1.36.0 (ae2a39403)
+      labels:
+        io.kompose.service: app-sample
+    spec:
+      containers:
+        - args:
+            - --registry
+            - -cp=keeper.http://edgex-core-keeper:59890
+          env:
+            - name: CLIENTS_CORE_COMMAND_HOST
+              value: edgex-core-command
+            - name: CLIENTS_CORE_DATA_HOST
+              value: edgex-core-data
+            - name: CLIENTS_SUPPORT-NOTIFICATIONS_HOST
+              value: edgex-support-notifications
+            - name: EDGEX_PROFILE
+              value: sample
+            - name: EDGEX_SECURITY_SECRET_STORE
+              value: "false"
+            - name: SERVICE_HOST
+              value: edgex-app-sample
+          image: domain:5000/edgexfoundry/app-service-configurable:4.0.0
+          name: edgex-app-sample
+          ports:
+            - containerPort: 59700
+              protocol: TCP
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsGroup: 2001
+            runAsUser: 2002
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: app-sample-cm0
+              readOnly: true
+              subPath: localtime
+      hostname: edgex-app-sample
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: localtime
+                path: localtime
+            name: app-sample-cm0
+          name: app-sample-cm0

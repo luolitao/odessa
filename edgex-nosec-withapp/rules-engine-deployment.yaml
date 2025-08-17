@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose -f ../docker-compose-k3s.yml convert
+    kompose.cmd: kompose -f ../docker-compose-no-secty.yml convert
     kompose.version: 1.36.0 (ae2a39403)
   labels:
     io.kompose.service: rules-engine
@@ -17,7 +17,7 @@ spec:
   template:
     metadata:
       annotations:
-        kompose.cmd: kompose -f ../docker-compose-k3s.yml convert
+        kompose.cmd: kompose -f ../docker-compose-no-secty.yml convert
         kompose.version: 1.36.0 (ae2a39403)
       labels:
         io.kompose.service: rules-engine
@@ -56,8 +56,8 @@ spec:
               value: "false"
             - name: KUIPER__BASIC__RESTPORT
               value: "59720"
-          image: domain:5000/lfedge/ekuiper:2.1.5-alpine
-          name: edgex-kuiper
+          image: domain:5000/lfedge/ekuiper:2.1.4-alpine
+          name: rules-engine
           ports:
             - containerPort: 59720
               protocol: TCP
@@ -65,25 +65,12 @@ spec:
             readOnlyRootFilesystem: true
             runAsGroup: 1001
             runAsUser: 1001
-            runAsNonRoot: true
           volumeMounts:
             - mountPath: /etc/localtime
               name: rules-engine-cm0
               readOnly: true
               subPath: localtime
-            - mountPath: /kuiper/data
-              name: kuiper-data
-              #subPath: data
-            - mountPath: /kuiper/etc
-              name: kuiper-etc
-              #subPath: etc
-            - mountPath: /kuiper/log
-              name: kuiper-log
-              #subPath: log
-            - mountPath: /kuiper/plugins
-              name: kuiper-plugins
-              #subPath: plugins
-      hostname: edgex-kuiper
+      hostname: rules-engine
       restartPolicy: Always
       volumes:
         - configMap:
@@ -92,18 +79,3 @@ spec:
                 path: localtime
             name: rules-engine-cm0
           name: rules-engine-cm0
-        - name: kuiper-data
-          persistentVolumeClaim:
-            claimName: kuiper-data
-          #hostPath:
-          #  path: "/mnt/edgex-kuiper/data"
-          #  type: DirectoryOrCreate
-        - name: kuiper-etc
-          persistentVolumeClaim:
-            claimName: kuiper-etc
-        - name: kuiper-log
-          persistentVolumeClaim:
-            claimName: kuiper-log
-        - name: kuiper-plugins
-          persistentVolumeClaim:
-            claimName: kuiper-plugins

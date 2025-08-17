@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f ../docker-compose-no-secty.yml convert
+    kompose.version: 1.36.0 (ae2a39403)
+  labels:
+    io.kompose.service: device-opc-ua
+  name: device-opc-ua
+spec:
+  ports:
+    - name: "59997"
+      port: 59997
+      targetPort: 59997
+  selector:
+    io.kompose.service: device-opc-ua
