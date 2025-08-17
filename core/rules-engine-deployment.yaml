@@ -65,36 +65,19 @@ spec:
             readOnlyRootFilesystem: true
             runAsGroup: 1001
             runAsUser: 1001
-            runAsNonRoot: true
           volumeMounts:
             - mountPath: /etc/localtime
               name: rules-engine-cm0
               readOnly: true
               subPath: localtime
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 454ce50 (0817)
-=======
             - mountPath: /kuiper/data
               name: kuiper-data
-              subPath: data
             - mountPath: /kuiper/etc
               name: kuiper-etc
-              subPath: etc
             - mountPath: /kuiper/log
               name: kuiper-log
-              subPath: log
             - mountPath: /kuiper/plugins
               name: kuiper-plugins
-              subPath: pluhins
->>>>>>> refs/remotes/origin/main
-<<<<<<< HEAD
-=======
->>>>>>> 8c827fc (0816)
-=======
->>>>>>> 454ce50 (0817)
       hostname: edgex-kuiper
       restartPolicy: Always
       volumes:
@@ -104,27 +87,19 @@ spec:
                 path: localtime
             name: rules-engine-cm0
           name: rules-engine-cm0
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 454ce50 (0817)
-=======
         - name: kuiper-data
-          persistentVolumeClaim:
-            claimName: kuiper-data
+          hostPath:
+            path: "/mnt/edgex-kuiper/data"
+            type: DirectoryOrCreate
         - name: kuiper-etc
-          persistentVolumeClaim:
-            claimName: kuiper-etc
+          hostPath:
+            path: "/mnt/edgex-kuiper/etc"
+            type: DirectoryOrCreate
         - name: kuiper-log
-          persistentVolumeClaim:
-            claimName: kuiper-log
+          hostPath:
+            path: "/mnt/edgex-kuiper/log"
+            type: DirectoryOrCreate
         - name: kuiper-plugins
-          persistentVolumeClaim:
-            claimName: kuiper-plugins
->>>>>>> refs/remotes/origin/main
-<<<<<<< HEAD
-=======
->>>>>>> 8c827fc (0816)
-=======
->>>>>>> 454ce50 (0817)
+          hostPath:
+            path: "/mnt/edgex-kuiper/plugins"
+            type: DirectoryOrCreate

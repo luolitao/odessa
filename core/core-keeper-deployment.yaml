@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f ../docker-compose-no-secty.yml convert
+    kompose.version: 1.36.0 (ae2a39403)
+  labels:
+    io.kompose.service: core-keeper
+  name: core-keeper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: core-keeper
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose -f ../docker-compose-no-secty.yml convert
+        kompose.version: 1.36.0 (ae2a39403)
+      labels:
+        io.kompose.service: core-keeper
+    spec:
+      containers:
+        - env:
+            - name: DATABASE_HOST
+              value: database
+            - name: DATABASE_PORT
+              value: "5432"
+            - name: EDGEX_SECURITY_SECRET_STORE
+              value: "false"
+            - name: MESSAGEBUS_AUTHMODE
+              value: none
+            - name: MESSAGEBUS_HOST
+              value: mqtt-broker
+            - name: MESSAGEBUS_PORT
+              value: "1883"
+            - name: MESSAGEBUS_PROTOCOL
+              value: tcp
+            - name: MESSAGEBUS_SECRETNAME
+            - name: MESSAGEBUS_TYPE
+              value: mqtt
+            - name: SERVICE_HOST
+              value: core-keeper
+          image: domain:5000/edgexfoundry/core-keeper:4.0.0
+          name: core-keeper
+          ports:
+            - containerPort: 59890
+              protocol: TCP
+          securityContext:
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: core-keeper-cm0
+              readOnly: true
+              subPath: localtime
+      hostname: core-keeper
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: localtime
+                path: localtime
+            name: core-keeper-cm0
+          name: core-keeper-cm0
