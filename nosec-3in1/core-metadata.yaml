@@ -54,7 +54,7 @@ spec:
               name: core-metadata-cm0
               readOnly: true
               subPath: localtime
-      hostname: core-metadata
+      hostname: edgex-core-metadata
       restartPolicy: Always
       volumes:
         - configMap:

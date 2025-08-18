@@ -43,7 +43,7 @@ spec:
             - name: EDGEX_SECURITY_SECRET_STORE
               value: "false"
             - name: SERVICE_HOST
-              value: edgex-app-rules-engine
+              value: app-rules-engine
           image: domain:5000/edgex/app-service-configurable:4.0.0
           name: app-rules-engine
           ports:
@@ -76,7 +76,7 @@ metadata:
     kompose.version: 1.36.0 (ae2a39403)
   labels:
     io.kompose.service: app-rules-engine
-  name: edgex-app-rules-engine
+  name: app-rules-engine
 spec:
   ports:
     - name: "59701"
