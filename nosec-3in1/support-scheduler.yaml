@@ -41,7 +41,7 @@ spec:
             - name: EDGEX_SECURITY_SECRET_STORE
               value: "false"
             - name: SERVICE_HOST
-              value: support-scheduler
+              value: edgex-support-scheduler
           image: domain:5000/edgex/support-scheduler:4.0.0
           name: support-scheduler
           ports:
@@ -56,7 +56,7 @@ spec:
               name: support-scheduler-cm0
               readOnly: true
               subPath: localtime
-      hostname: edgex-support-scheduler
+      hostname: support-scheduler
       restartPolicy: Always
       volumes:
         - configMap:
@@ -74,7 +74,7 @@ metadata:
     kompose.version: 1.36.0 (ae2a39403)
   labels:
     io.kompose.service: support-scheduler
-  name: support-scheduler
+  name: edgex-support-scheduler
 spec:
   ports:
     - name: "59863"

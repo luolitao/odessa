@@ -42,7 +42,7 @@ services:
       STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT: "54322"
       STAGEGATE_WAITFOR_TIMEOUT: 60s
     hostname: app-rules-engine
-    image: domain:5000/edgexfoundry/app-service-configurable:4.0.0
+    image: domain:5000/edgex/app-service-configurable:4.0.0
     networks:
       edgex-network: null
     ports:
@@ -123,7 +123,7 @@ services:
       STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT: "54322"
       STAGEGATE_WAITFOR_TIMEOUT: 60s
     hostname: core-command
-    image: domain:5000/edgexfoundry/core-command:4.0.0
+    image: domain:5000/edgex/core-command:4.0.0
     networks:
       edgex-network: null
     ports:
@@ -202,7 +202,7 @@ services:
       STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT: "54322"
       STAGEGATE_WAITFOR_TIMEOUT: 60s
     hostname: core-common-config-bootstrapper
-    image: domain:5000/edgexfoundry/core-common-config-bootstrapper:4.0.0
+    image: domain:5000/edgex/core-common-config-bootstrapper:4.0.0
     networks:
       edgex-network: null
     read_only: true
@@ -272,7 +272,7 @@ services:
       STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT: "54322"
       STAGEGATE_WAITFOR_TIMEOUT: 60s
     hostname: core-data
-    image: domain:5000/edgexfoundry/core-data:4.0.0
+    image: domain:5000/edgex/core-data:4.0.0
     networks:
       edgex-network: null
     ports:
@@ -347,7 +347,7 @@ services:
       STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT: "54322"
       STAGEGATE_WAITFOR_TIMEOUT: 60s
     hostname: core-keeper
-    image: domain:5000/edgexfoundry/core-keeper:4.0.0
+    image: domain:5000/edgex/core-keeper:4.0.0
     networks:
       edgex-network: null
     ports:
@@ -421,7 +421,7 @@ services:
       STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT: "54322"
       STAGEGATE_WAITFOR_TIMEOUT: 60s
     hostname: core-metadata
-    image: domain:5000/edgexfoundry/core-metadata:4.0.0
+    image: domain:5000/edgex/core-metadata:4.0.0
     networks:
       edgex-network: null
     ports:
@@ -570,7 +570,7 @@ services:
       STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT: "54322"
       STAGEGATE_WAITFOR_TIMEOUT: 60s
     hostname: edgex-device-rest
-    image: domain:5000/edgexfoundry/device-rest:4.0.0
+    image: domain:5000/edgex/device-rest:4.0.0
     networks:
       edgex-network: null
     ports:
@@ -647,7 +647,7 @@ services:
       STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT: "54322"
       STAGEGATE_WAITFOR_TIMEOUT: 60s
     hostname: edgex-device-virtual
-    image: domain:5000/edgexfoundry/device-virtual:4.0.0
+    image: domain:5000/edgex/device-virtual:4.0.0
     networks:
       edgex-network: null
     ports:
@@ -991,7 +991,7 @@ services:
       STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT: "54322"
       STAGEGATE_WAITFOR_TIMEOUT: 60s
     hostname: security-bootstrapper
-    image: domain:5000/edgexfoundry/security-bootstrapper:4.0.0
+    image: domain:5000/edgex/security-bootstrapper:4.0.0
     networks:
       edgex-network: null
     read_only: true
@@ -1110,7 +1110,7 @@ services:
       STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT: "54322"
       STAGEGATE_WAITFOR_TIMEOUT: 60s
     hostname: security-proxy-setup
-    image: domain:5000/edgexfoundry/security-proxy-setup:4.0.0
+    image: domain:5000/edgex/security-proxy-setup:4.0.0
     networks:
       edgex-network: null
     read_only: true
@@ -1183,7 +1183,7 @@ services:
       STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT: "54322"
       STAGEGATE_WAITFOR_TIMEOUT: 60s
     hostname: security-secretstore-setup
-    image: domain:5000/edgexfoundry/security-secretstore-setup:4.0.0
+    image: domain:5000/edgex/security-secretstore-setup:4.0.0
     networks:
       edgex-network: null
     read_only: true
@@ -1268,7 +1268,7 @@ services:
       STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT: "54322"
       STAGEGATE_WAITFOR_TIMEOUT: 60s
     hostname: support-notifications
-    image: domain:5000/edgexfoundry/support-notifications:4.0.0
+    image: domain:5000/edgex/support-notifications:4.0.0
     networks:
       edgex-network: null
     ports:
@@ -1345,7 +1345,7 @@ services:
       STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT: "54322"
       STAGEGATE_WAITFOR_TIMEOUT: 60s
     hostname: support-scheduler
-    image: domain:5000/edgexfoundry/support-scheduler:4.0.0
+    image: domain:5000/edgex/support-scheduler:4.0.0
     networks:
       edgex-network: null
     ports:
@@ -1412,7 +1412,7 @@ services:
       STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT: "54322"
       STAGEGATE_WAITFOR_TIMEOUT: 60s
     hostname: edgex-ui-go
-    image: domain:5000/edgexfoundry/edgex-ui:4.0.0
+    image: domain:5000/edgex/edgex-ui:4.0.0
     networks:
       edgex-network: null
     ports:

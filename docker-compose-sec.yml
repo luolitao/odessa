@@ -283,7 +283,7 @@ services:
       STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT: "54322"
       STAGEGATE_WAITFOR_TIMEOUT: 60s
     hostname: security-bootstrapper
-    image: domain:5000/edgexfoundry/security-bootstrapper:4.0.0
+    image: domain:5000/edgex/security-bootstrapper:4.0.0
     networks:
       edgex-network: null
     read_only: true
@@ -333,7 +333,7 @@ services:
       STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT: "54322"
       STAGEGATE_WAITFOR_TIMEOUT: 60s
     hostname: security-proxy-setup
-    image: domain:5000/edgexfoundry/security-proxy-setup:4.0.0
+    image: domain:5000/edgex/security-proxy-setup:4.0.0
     networks:
       edgex-network: null
     read_only: true
@@ -406,7 +406,7 @@ services:
       STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT: "54322"
       STAGEGATE_WAITFOR_TIMEOUT: 60s
     hostname: security-secretstore-setup
-    image: domain:5000/edgexfoundry/security-secretstore-setup:4.0.0
+    image: domain:5000/edgex/security-secretstore-setup:4.0.0
     networks:
       edgex-network: null
     read_only: true
@@ -473,7 +473,7 @@ services:
       STAGEGATE_SECRETSTORESETUP_TOKENS_READYPORT: "54322"
       STAGEGATE_WAITFOR_TIMEOUT: 60s
     hostname: edgex-ui-go
-    image: domain:5000/edgexfoundry/edgex-ui:4.0.0
+    image: domain:5000/edgex/edgex-ui:4.0.0
     networks:
       edgex-network: null
     ports:

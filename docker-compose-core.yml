@@ -18,7 +18,7 @@ services:
       DEVICE_SERVICES_CLIENTS_CORE_METADATA_HOST: edgex-core-metadata
       EDGEX_SECURITY_SECRET_STORE: "false"
     hostname: edgex-core-common-config-bootstrapper
-    image: domain:5000/edgexfoundry/core-common-config-bootstrapper:4.0.0
+    image: domain:5000/edgex/core-common-config-bootstrapper:4.0.0
     networks:
       edgex-network: null
     read_only: true
@@ -49,7 +49,7 @@ services:
       MESSAGEBUS_TYPE: mqtt
       SERVICE_HOST: edgex-core-keeper
     hostname: edgex-core-keeper
-    image: domain:5000/edgexfoundry/core-keeper:4.0.0
+    image: domain:5000/edgex/core-keeper:4.0.0
     networks:
       edgex-network: null
     ports:
@@ -86,7 +86,7 @@ services:
       EDGEX_SECURITY_SECRET_STORE: "false"
       SERVICE_HOST: edgex-core-metadata
     hostname: edgex-core-metadata
-    image: domain:5000/edgexfoundry/core-metadata:4.0.0
+    image: domain:5000/edgex/core-metadata:4.0.0
     networks:
       edgex-network: null
     ports:
@@ -214,7 +214,7 @@ services:
       EDGEX_SECURITY_SECRET_STORE: "false"
       SERVICE_HOST: edgex-ui-go
     hostname: edgex-ui-go
-    image: domain:5000/edgexfoundry/edgex-ui:4.0.0
+    image: domain:5000/edgex/edgex-ui:4.0.0
     networks:
       edgex-network: null
     ports:

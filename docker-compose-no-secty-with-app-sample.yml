@@ -21,7 +21,7 @@ services:
       EDGEX_SECURITY_SECRET_STORE: "false"
       SERVICE_HOST: edgex-app-rules-engine
     hostname: edgex-app-rules-engine
-    image: domain:5000/edgexfoundry/app-service-configurable:4.0.0
+    image: domain:5000/edgex/app-service-configurable:4.0.0
     networks:
       edgex-network: null
     ports:
@@ -65,7 +65,7 @@ services:
       EDGEX_SECURITY_SECRET_STORE: "false"
       SERVICE_HOST: edgex-app-sample
     hostname: edgex-app-sample
-    image: domain:5000/edgexfoundry/app-service-configurable:4.0.0
+    image: domain:5000/edgex/app-service-configurable:4.0.0
     networks:
       edgex-network: null
     ports:
@@ -109,7 +109,7 @@ services:
       EXTERNALMQTT_URL: tcp://edgex-mqtt-broker:1883
       SERVICE_HOST: edgex-core-command
     hostname: edgex-core-command
-    image: domain:5000/edgexfoundry/core-command:4.0.0
+    image: domain:5000/edgex/core-command:4.0.0
     networks:
       edgex-network: null
     ports:
@@ -148,7 +148,7 @@ services:
       DEVICE_SERVICES_CLIENTS_CORE_METADATA_HOST: edgex-core-metadata
       EDGEX_SECURITY_SECRET_STORE: "false"
     hostname: edgex-core-common-config-bootstrapper
-    image: domain:5000/edgexfoundry/core-common-config-bootstrapper:4.0.0
+    image: domain:5000/edgex/core-common-config-bootstrapper:4.0.0
     networks:
       edgex-network: null
     read_only: true
@@ -181,7 +181,7 @@ services:
       EDGEX_SECURITY_SECRET_STORE: "false"
       SERVICE_HOST: edgex-core-data
     hostname: edgex-core-data
-    image: domain:5000/edgexfoundry/core-data:4.0.0
+    image: domain:5000/edgex/core-data:4.0.0
     networks:
       edgex-network: null
     ports:
@@ -219,7 +219,7 @@ services:
       MESSAGEBUS_TYPE: mqtt
       SERVICE_HOST: edgex-core-keeper
     hostname: edgex-core-keeper
-    image: domain:5000/edgexfoundry/core-keeper:4.0.0
+    image: domain:5000/edgex/core-keeper:4.0.0
     networks:
       edgex-network: null
     ports:
@@ -256,7 +256,7 @@ services:
       EDGEX_SECURITY_SECRET_STORE: "false"
       SERVICE_HOST: edgex-core-metadata
     hostname: edgex-core-metadata
-    image: domain:5000/edgexfoundry/core-metadata:4.0.0
+    image: domain:5000/edgex/core-metadata:4.0.0
     networks:
       edgex-network: null
     ports:
@@ -331,7 +331,7 @@ services:
       EDGEX_SECURITY_SECRET_STORE: "false"
       SERVICE_HOST: edgex-device-rest
     hostname: edgex-device-rest
-    image: domain:5000/edgexfoundry/device-rest:4.0.0
+    image: domain:5000/edgex/device-rest:4.0.0
     networks:
       edgex-network: null
     ports:
@@ -374,7 +374,7 @@ services:
       EDGEX_SECURITY_SECRET_STORE: "false"
       SERVICE_HOST: edgex-device-virtual
     hostname: edgex-device-virtual
-    image: domain:5000/edgexfoundry/device-virtual:4.0.0
+    image: domain:5000/edgex/device-virtual:4.0.0
     networks:
       edgex-network: null
     ports:
@@ -499,7 +499,7 @@ services:
       EDGEX_SECURITY_SECRET_STORE: "false"
       SERVICE_HOST: edgex-support-notifications
     hostname: edgex-support-notifications
-    image: domain:5000/edgexfoundry/support-notifications:4.0.0
+    image: domain:5000/edgex/support-notifications:4.0.0
     networks:
       edgex-network: null
     ports:
@@ -539,7 +539,7 @@ services:
       EDGEX_SECURITY_SECRET_STORE: "false"
       SERVICE_HOST: edgex-support-scheduler
     hostname: edgex-support-scheduler
-    image: domain:5000/edgexfoundry/support-scheduler:4.0.0
+    image: domain:5000/edgex/support-scheduler:4.0.0
     networks:
       edgex-network: null
     ports:
@@ -566,7 +566,7 @@ services:
       EDGEX_SECURITY_SECRET_STORE: "false"
       SERVICE_HOST: edgex-ui-go
     hostname: edgex-ui-go
-    image: domain:5000/edgexfoundry/edgex-ui:4.0.0
+    image: domain:5000/edgex/edgex-ui:4.0.0
     networks:
       edgex-network: null
     ports:

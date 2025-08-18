@@ -46,9 +46,9 @@ spec:
             - name: ALL_SERVICES_REGISTRY_HOST
               value: core-keeper
             - name: APP_SERVICES_CLIENTS_CORE_METADATA_HOST
-              value: core-metadata
+              value: edgex-core-metadata
             - name: DEVICE_SERVICES_CLIENTS_CORE_METADATA_HOST
-              value: core-metadata
+              value: edgex-core-metadata
             - name: EDGEX_SECURITY_SECRET_STORE
               value: "false"
           image: domain:5000/edgex/core-common-config-bootstrapper:4.0.0
