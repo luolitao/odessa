@@ -68,7 +68,7 @@ spec:
             - name: KUIPER__BASIC__RESTPORT
               value: "59720"
           image: domain:5000/ekuiper:2.1.5-alpine
-          name: edgex-kuiper
+          name: rules-engine
           ports:
             - containerPort: 59720
               protocol: TCP
@@ -81,7 +81,7 @@ spec:
               name: rules-engine-cm0
               readOnly: true
               subPath: localtime
-      hostname: edgex-kuiper
+      hostname: rules-engine
       restartPolicy: Always
       volumes:
         - configMap:
