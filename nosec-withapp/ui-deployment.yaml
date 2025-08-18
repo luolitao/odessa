@@ -28,7 +28,7 @@ spec:
               value: "false"
             - name: SERVICE_HOST
               value: ui
-          #image: domain:5000/edgexfoundry/edgex-ui:4.0.0
+          image: domain:5000/edgex/edgex-ui:4.0.0
           image: domain:5000/edgex-ui:4.1.0
           name: ui
           ports:
@@ -36,8 +36,8 @@ spec:
               protocol: TCP
           securityContext:
             readOnlyRootFilesystem: false
-          #  runAsGroup: 2001
-          #  runAsUser: 2002
+            runAsGroup: 2001
+            runAsUser: 2002
           volumeMounts:
             - mountPath: /etc/localtime
               name: ui-cm0

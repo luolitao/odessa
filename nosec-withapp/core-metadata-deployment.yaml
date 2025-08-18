@@ -31,7 +31,7 @@ spec:
               value: "false"
             - name: SERVICE_HOST
               value: edgex-core-metadata
-          image: domain:5000/edgexfoundry/core-metadata:4.0.0
+          image: domain:5000/edgex/core-metadata:4.0.0
           name: core-metadata
           ports:
             - containerPort: 59881

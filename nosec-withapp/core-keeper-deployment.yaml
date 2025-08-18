@@ -43,7 +43,7 @@ spec:
               value: mqtt
             - name: SERVICE_HOST
               value: core-keeper
-          image: domain:5000/edgexfoundry/core-keeper:4.0.0
+          image: domain:5000/edgex/core-keeper:4.0.0
           name: core-keeper
           ports:
             - containerPort: 59890

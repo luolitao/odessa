@@ -32,8 +32,8 @@ spec:
             - name: EXTERNALMQTT_URL
               value: tcp://mqtt-broker:1883
             - name: SERVICE_HOST
-              value: edgex-core-command
-          image: domain:5000/edgexfoundry/core-command:4.0.0
+              value: core-command
+          image: domain:5000/edgex/core-command:4.0.0
           name: core-command
           ports:
             - containerPort: 59882
@@ -47,7 +47,7 @@ spec:
               name: core-command-cm0
               readOnly: true
               subPath: localtime
-      hostname: edgex-core-command
+      hostname: core-command
       restartPolicy: Always
       volumes:
         - configMap:

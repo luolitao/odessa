@@ -31,7 +31,7 @@ spec:
               value: "false"
             - name: SERVICE_HOST
               value: edgex-support-scheduler
-          image: domain:5000/edgexfoundry/support-scheduler:4.0.0
+          image: domain:5000/edgex/support-scheduler:4.0.0
           name: support-scheduler
           ports:
             - containerPort: 59863

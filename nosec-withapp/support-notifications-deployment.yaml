@@ -31,7 +31,7 @@ spec:
               value: "false"
             - name: SERVICE_HOST
               value: edgex-support-notifications
-          image: domain:5000/edgexfoundry/support-notifications:4.0.0
+          image: domain:5000/edgex/support-notifications:4.0.0
           name: support-notifications
           ports:
             - containerPort: 59860

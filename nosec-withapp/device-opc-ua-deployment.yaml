@@ -31,7 +31,7 @@ spec:
               value: "false"
             - name: SERVICE_HOST
               value: device-opc-ua
-          image: domain:5000/edgexfoundry/device-opc-ua:4.0.0
+          image: domain:5000/edgex/device-opc-ua:4.0.0
           name: device-opc-ua
           ports:
             - containerPort: 59997

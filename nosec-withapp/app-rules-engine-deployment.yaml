@@ -33,7 +33,7 @@ spec:
               value: "false"
             - name: SERVICE_HOST
               value: edgex-app-rules-engine
-          image: domain:5000/edgexfoundry/app-service-configurable:4.0.0
+          image: domain:5000/edgex/app-service-configurable:4.0.0
           name: app-rules-engine
           ports:
             - containerPort: 59701

@@ -40,7 +40,7 @@ spec:
               value: edgex-core-metadata
             - name: EDGEX_SECURITY_SECRET_STORE
               value: "false"
-          image: domain:5000/edgexfoundry/core-common-config-bootstrapper:4.0.0
+          image: domain:5000/edgex/core-common-config-bootstrapper:4.0.0
           name: core-common-config-bootstrapper
           securityContext:
             readOnlyRootFilesystem: true

@@ -31,7 +31,7 @@ spec:
               value: "false"
             - name: SERVICE_HOST
               value: device-modbus
-          image: domain:5000/edgexfoundry/device-modbus:4.0.0
+          image: domain:5000/edgex/device-modbus:4.0.0
           name: device-modbus
           ports:
             - containerPort: 59901

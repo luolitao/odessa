@@ -33,7 +33,7 @@ spec:
               value: mqtt-broker
             - name: SERVICE_HOST
               value: device-mqtt
-          image: domain:5000/edgexfoundry/device-mqtt:4.0.0
+          image: domain:5000/edgex/device-mqtt:4.0.0
           name: device-mqtt
           ports:
             - containerPort: 59982
