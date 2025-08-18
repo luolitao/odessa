@@ -56,7 +56,7 @@ spec:
               name: support-scheduler-cm0
               readOnly: true
               subPath: localtime
-      hostname: support-scheduler
+      hostname: edgex-support-scheduler
       restartPolicy: Always
       volumes:
         - configMap:
